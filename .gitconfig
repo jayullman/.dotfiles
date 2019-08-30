@@ -1,0 +1,54 @@
+[core]
+    editor = nvim
+    excludesfile = /Users/jason.ullman/.gitignore_global
+[push]
+    default = upstream
+[merge]
+    conflictstyle = diff3
+[user]
+	name = Jay Ullman
+	email = jayullman@gmail.com
+
+[alias]
+    co = checkout
+    cob = checkout -b
+    lb = checkout @{-1}
+    amd = commit -C HEAD --amend
+
+	# list files which have changed since REVIEW_BASE
+  # (REVIEW_BASE defaults to 'master' in my zshrc)
+  files = !git diff --name-only $(git merge-base HEAD $REVIEW_BASE)
+
+  # Same as above, but with a diff stat instead of just names
+  # (better for interactive use)
+  stat = !git diff --stat $(git merge-base HEAD $REVIEW_BASE)
+
+	# NOTE: These aliases depend on the `git files` alias from
+  # a few sections ago!
+
+  # Open all files changed since REVIEW_BASE in Vim tabs
+  # Then, run fugitive's :Gdiff in each tab, and finally
+  # tell vim-gitgutter to show +/- for changes since REVIEW_BASE
+  review = !nvim -p $(git files) +\"tabdo Gdiff $REVIEW_BASE\" +\"let g:gitgutter_diff_base = '$REVIEW_BASE'\"
+
+  # Same as the above, except specify names of files as arguments,
+  # instead of opening all files:
+  # git reviewone foo.js bar.js
+  reviewone = !nvim -p +\"tabdo Gdiff $REVIEW_BASE\" +\"let g:gitgutter_diff_base = '$REVIEW_BASE'\"
+	logline = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+
+
+
+[diff]
+    tool = vscode
+    [difftool "vscode"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+
+[commit]
+  template = ~/.gitmessage
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
