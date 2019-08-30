@@ -53,9 +53,9 @@ let mapleader = " "
 set sts=2
 set ts=2
 set sw=2
+set nowrap
 
-set foldcolumn=8
-" set relativenumber
+set foldcolumn=6
 set number
 
 
@@ -63,16 +63,13 @@ set number
 " set visualbell 
 " set t_vb=
 
-" Search down into subfolders
-" Provides tab-completion for all file-related tasks
-set path+=**
 " Display all matching files when we tab complete
 set wildmenu
-set wildignore+=**/node_modules/**
 " Now we can:
 "  - hit tab to :find by partial match
 "  - use * to make it fuzzy
 "  - :b lets you autocomplete any open buffer
+" set wildignore+=**/node_modules/** " disabled - interfered with gf into node_modules
 
 "  Set Mouse scroll and visual drag/select
 set mouse=nicr
@@ -82,16 +79,16 @@ set ignorecase
 set smartcase
 
 " allows gf to work
+set path+=$PWD/node_modules
 set suffixesadd=.js,.ts,.tsx,.jsx
+set isfname+=@-@ " allows gf to find @ scoped packages
 
+" Search down into subfolders
+" Provides tab-completion for all file-related tasks
+set path+=**
 
-" For coc completion
-" enter selects suggestion
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" triggers selection	
-inoremap <silent><expr> <c-space> coc#refresh()
-" enter selects first option without selecting it
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+set foldmethod=indent
+set foldlevel=99
 
 " enable current line highlighting (plugin)
 let g:conoline_auto_enable = 1
@@ -127,9 +124,6 @@ nnoremap <C-H> <C-W><C-H>
 set splitbelow
 set splitright
 
-" ctrlp honors gitignore
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-
 " fix: ensures file contents are cleared when exiting vim / clears terminal
 if &term =~ "ansi"
     let &t_ti = "\<Esc>[?47h"
@@ -154,3 +148,32 @@ nnoremap <Leader><CR> :
 " Allow passing optional flags into the Rg command.
 " Example: :Rg myterm -g '*.md'
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
+
+" ============================================================================ "
+" ===                           Coc SETUP                               === "
+" ============================================================================ "
+" Coc configuration
+" https://github.com/neoclide/coc.nvim#example-vim-configuration
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" For coc completion
+" enter selects suggestion
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" triggers selection	
+inoremap <silent><expr> <c-space> coc#refresh()
+" enter selects first option without selecting it
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+
+" Better display for messages
+set cmdheight=2
