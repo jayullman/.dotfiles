@@ -19,8 +19,8 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-call plug#end()
+Plug 'yonchu/accelerated-smooth-scroll'
+ call plug#end()
 
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 "If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
@@ -56,8 +56,8 @@ set sw=2
 set nowrap
 
 set foldcolumn=6
-set number
-
+set number relativenumber
+set scrolloff=1
 
 "turn off annoying beep
 " set visualbell 
@@ -96,8 +96,8 @@ let g:conoline_auto_enable = 1
 " Snippets
 " console.log()
 " nnoremap <silent><Leader>,s :-1read $HOME/snippets.txt<CR>f)i
-nnoremap ,cl :-1read $HOME/snippets.txt<CR>f)i
-inoremap ,cl <Esc>:-1read $HOME/snippets.txt<CR>f)i
+" nnoremap ,cl :-1read $HOME/snippets.txt<CR>f)i
+" inoremap ,cl <Esc>:-1read $HOME/snippets.txt<CR>f)i
 
 " temp nnoremap <silent><Leader>l :nohlsearch<CR>
 
@@ -112,13 +112,21 @@ map <C-n> :NERDTreeToggle<CR>
 " command F GFiles
 " Format with Prettier
 " command P Prettier
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
+" command! -nargs=0 Prettier :CocCommand prettier.formatFile " deprecated
+nnoremap <silent><Leader>p :CocCommand prettier.formatFile<CR>
 
 " Window navigation
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+" Bubble single lines
+nmap <C-Up> ddkP
+nmap <C-Down> ddp
+" Bubble multiple lines
+vmap <C-Up> xkP`[V`]
+vmap <C-Down> xp`[V`]
 
 " Open splits to the left and below
 set splitbelow
@@ -140,7 +148,8 @@ nnoremap <silent><Leader>l :nohlsearch<CR>
 " Launch fzf with CTRL+P
 nnoremap <silent> <C-p> :FZF -m<CR>
 " Launch Rg > FZF with CTRL+F
-nnoremap <C-s> :Rg 
+" nnoremap <C-s> :Rg " deprecated
+nnoremap <Leader>f :Rg 
 
 " Enter command mode with Leader+Enter
 nnoremap <Leader><CR> :
@@ -160,6 +169,10 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" navigate chunks of current buffer
+nmap [g <Plug>(coc-git-prevchunk)
+nmap ]g <Plug>(coc-git-nextchunk)
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)

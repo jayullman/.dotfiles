@@ -1,4 +1,5 @@
 # Enable tab completion
+# source ~/.git-prompt.sh
 source ~/git-completion.bash
 source ~/.bashrc
 
@@ -31,7 +32,6 @@ cyan="\[\033[0;36m\]"
 reset="\[\033[0m\]"
 
 # Change command prompt
-source ~/git-prompt.sh
 export GIT_PS1_SHOWDIRTYSTATE=1
 # '\u' adds the name of the current user to the prompt
 # '\$(__git_ps1)' adds git-related stuff
@@ -41,13 +41,13 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 # export PS1="$cyan\u$cyan\$(__git_ps1)$cyan \W$ $reset"
 export PS1="$cyan\W$cyan\$(__git_ps1) : $reset"
 
-# alias vi='nvim'
 export NODE_PATH="/Users/jason.ullman/ifit-repos/ifit"
 export REVIEW_BASE="test"
 
 alias cdpfw="cd ~/ifit-repos/personal-feed-webview"
 alias cdufs="cd ~/ifit-repos/user-feed"
 alias vimrc="nvim ~/.config/nvim/init.vim"
+alias vi='nvim'
 
 alias cdap="cd ~/ifit-repos/admin-portal"
 
