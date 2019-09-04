@@ -57,6 +57,9 @@ alias cdwls="cd ~/ifit-repos/wolf-library-service"
 alias cdwws="cd ~/ifit-repos/wolf-workouts-service"
 alias cdwww="cd ~/ifit-repos/wolf-workouts-webview"
 
+alias viwws="cd ~/ifit-repos/wolf-workouts-service && vi ."
+alias viwww="cd ~/ifit-repos/wolf-workouts-webview && vi ."
+
 alias cdheckle="cd ~/ifit-repos/heckle"
 
 alias yas="yarn start"
@@ -78,6 +81,5 @@ export PATH="$HOME/.cargo/bin:$PATH"
 # requires https://github.com/BurntSushi/ripgrep
 export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!{.git,node_modules}'"
 [ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
-
 
 alias dotfiles='/usr/local/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'

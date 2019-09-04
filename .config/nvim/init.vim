@@ -1,6 +1,5 @@
 call plug#begin('~/.vim/plugged')
-"Plug 'joshdick/onedark.vim'
-Plug 'dracula/vim', { 'as': 'dracula' }
+
 
 Plug 'leafgarland/typescript-vim'
 Plug 'MaxMEllon/vim-jsx-pretty' " Plug 'ianks/vim-tsx'
@@ -20,7 +19,14 @@ Plug 'tpope/vim-surround'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'yonchu/accelerated-smooth-scroll'
- call plug#end()
+
+" Color schemes
+Plug 'joshdick/onedark.vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'arcticicestudio/nord-vim'
+" Plug 'bling/vim-bufferline'
+call plug#end()
 
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 "If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
@@ -42,6 +48,12 @@ endif
 set hidden
 
 syntax on
+
+
+
+" ============================================================================ "
+" ===                           Appearance                               === "
+" ============================================================================ "
 colorscheme dracula
 
 " prevent cursor moving when pressing space(leader)
@@ -59,6 +71,9 @@ set foldcolumn=6
 set number relativenumber
 set scrolloff=1
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
 "turn off annoying beep
 " set visualbell 
 " set t_vb=
@@ -70,6 +85,9 @@ set wildmenu
 "  - use * to make it fuzzy
 "  - :b lets you autocomplete any open buffer
 " set wildignore+=**/node_modules/** " disabled - interfered with gf into node_modules
+
+" Allows autocomplete with edit commants to be case insensitive
+set wildignorecase
 
 "  Set Mouse scroll and visual drag/select
 set mouse=nicr
@@ -90,6 +108,9 @@ set path+=**
 set foldmethod=indent
 set foldlevel=99
 
+" Better display for messages
+set cmdheight=2
+
 " enable current line highlighting (plugin)
 let g:conoline_auto_enable = 1
 
@@ -99,11 +120,11 @@ let g:conoline_auto_enable = 1
 " nnoremap ,cl :-1read $HOME/snippets.txt<CR>f)i
 " inoremap ,cl <Esc>:-1read $HOME/snippets.txt<CR>f)i
 
-" temp nnoremap <silent><Leader>l :nohlsearch<CR>
-
 command! -nargs=0 P :CocCommand prettier.formatFile
 
-
+nnoremap <Leader>q :close<CR>
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>e :NERDTreeFind<CR>
 
 " Toggle NERDTree
 map <C-n> :NERDTreeToggle<CR>
@@ -112,6 +133,7 @@ map <C-n> :NERDTreeToggle<CR>
 " command F GFiles
 " Format with Prettier
 " command P Prettier
+command! Copypath let @* = expand('%')
 " command! -nargs=0 Prettier :CocCommand prettier.formatFile " deprecated
 nnoremap <silent><Leader>p :CocCommand prettier.formatFile<CR>
 
@@ -147,6 +169,9 @@ nnoremap <silent><Leader>l :nohlsearch<CR>
 " From find and replace video
 " Launch fzf with CTRL+P
 nnoremap <silent> <C-p> :FZF -m<CR>
+" Launch fuzzy buffer list
+nnoremap <silent><Leader>b :Buffer<CR>
+
 " Launch Rg > FZF with CTRL+F
 " nnoremap <C-s> :Rg " deprecated
 nnoremap <Leader>f :Rg 
@@ -154,12 +179,15 @@ nnoremap <Leader>f :Rg
 " Enter command mode with Leader+Enter
 nnoremap <Leader><CR> :
 
+" Paste over visual selection without yanking selection
+vnoremap <leader>p "_dP
+
 " Allow passing optional flags into the Rg command.
 " Example: :Rg myterm -g '*.md'
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
 
 " ============================================================================ "
-" ===                           Coc SETUP                               === "
+" ===                           Coc SETUP                                  === "
 " ============================================================================ "
 " Coc configuration
 " https://github.com/neoclide/coc.nvim#example-vim-configuration
@@ -169,6 +197,11 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" Use `[c` and `]c` to navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
 
 " navigate chunks of current buffer
 nmap [g <Plug>(coc-git-prevchunk)
@@ -188,5 +221,5 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " enter selects first option without selecting it
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 
-" Better display for messages
-set cmdheight=2
+
+
