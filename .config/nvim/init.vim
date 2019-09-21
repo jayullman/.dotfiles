@@ -2,6 +2,7 @@ call plug#begin('~/.vim/plugged')
 
 
 Plug 'leafgarland/typescript-vim'
+Plug 'HerringtonDarkholme/yats.vim'
 Plug 'MaxMEllon/vim-jsx-pretty' " Plug 'ianks/vim-tsx'
 
 Plug 'scrooloose/nerdtree'
@@ -16,9 +17,11 @@ Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-markdown'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'yonchu/accelerated-smooth-scroll'
+Plug 'junegunn/goyo.vim'
 
 " Color schemes
 Plug 'joshdick/onedark.vim'
@@ -27,6 +30,22 @@ Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'arcticicestudio/nord-vim'
 " Plug 'bling/vim-bufferline'
 call plug#end()
+
+let g:goyo_width = 200 
+
+" style type definitions in preview window
+let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'typescript']
+
+function! s:goyo_enter()
+	set wrap
+endfunction
+
+function! s:goyo_leave()
+	set nowrap
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 "If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
@@ -67,12 +86,16 @@ set ts=2
 set sw=2
 set nowrap
 
-set foldcolumn=6
+" set foldcolumn=6
 set number relativenumber
 set scrolloff=1
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Turn off folding by default
+set nofoldenable
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Display filename/path at top
+set title
 
 "turn off annoying beep
 " set visualbell 
@@ -105,8 +128,8 @@ set isfname+=@-@ " allows gf to find @ scoped packages
 " Provides tab-completion for all file-related tasks
 set path+=**
 
-set foldmethod=indent
-set foldlevel=99
+" set foldmethod=indent
+" set foldlevel=99
 
 " Better display for messages
 set cmdheight=2
@@ -118,22 +141,32 @@ let g:conoline_auto_enable = 1
 " console.log()
 " nnoremap <silent><Leader>,s :-1read $HOME/snippets.txt<CR>f)i
 " nnoremap ,cl :-1read $HOME/snippets.txt<CR>f)i
-" inoremap ,cl <Esc>:-1read $HOME/snippets.txt<CR>f)i
+inoremap \cl console.log()<Esc>i
+inoremap \lg console.log()<Esc>i
+inoremap \log console.log()<Esc>i
+inoremap \here console.log('--- HERE ---');<Esc>
 
 command! -nargs=0 P :CocCommand prettier.formatFile
 
+" Leader shortcuts
 nnoremap <Leader>q :close<CR>
 nnoremap <Leader>w :w<CR>
+nnoremap <Leader>y :only<CR>
+nnoremap <Leader>v :vs<CR>
 nnoremap <Leader>e :NERDTreeFind<CR>
 
 " Toggle NERDTree
 map <C-n> :NERDTreeToggle<CR>
-
+" Don't open new windows with NERDTree
+" let g:NERDTreeHijackNetrw=0
+let NERDTreeShowHidden=1
 " Shortcut for fzf GFiles (opens all files tracked by git)
 " command F GFiles
 " Format with Prettier
 " command P Prettier
 command! Copypath let @* = expand('%')
+command! Vimrc vs | e $MYVIMRC
+
 " command! -nargs=0 Prettier :CocCommand prettier.formatFile " deprecated
 nnoremap <silent><Leader>p :CocCommand prettier.formatFile<CR>
 
@@ -222,4 +255,13 @@ inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 
 
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
