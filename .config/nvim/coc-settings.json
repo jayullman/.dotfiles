@@ -1,5 +1,4 @@
 {
   "prettier.trailingComma": "all",
   "diagnostic.refreshOnInsertMode": true,
-  "git.enableGutters": true
 }

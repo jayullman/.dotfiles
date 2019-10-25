@@ -20,15 +20,17 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-markdown'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'yonchu/accelerated-smooth-scroll'
+" Plug 'yonchu/accelerated-smooth-scroll'
 Plug 'junegunn/goyo.vim'
 
 " Color schemes
 Plug 'joshdick/onedark.vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
-Plug 'arcticicestudio/nord-vim'
-" Plug 'bling/vim-bufferline'
+Plug 'chriskempson/base16-vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'tomasiser/vim-code-dark'
+Plug 'haishanh/night-owl.vim'
 call plug#end()
 
 let g:goyo_width = 200 
@@ -50,31 +52,37 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 "If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
 "(see < http://sunaku.github.io/tmux-24bit-color.html#usage > for more information.)
-if (empty($TMUX))
-  if (has("nvim"))
-    "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  endif
-  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
-  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
-  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
-  if (has("termguicolors"))
-    set termguicolors
-  endif
-endif
+
+" Comment out when using terminal
+"if (empty($TMUX))
+"  if (has("nvim"))
+"    "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+"    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+"  endif
+"  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+"  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+"  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+"  if (has("termguicolors"))
+"    set termguicolors
+"  endif
+"endif
 
 " Allow buffers to be hidden with unsaved changes
 set hidden
 
-syntax on
 
 
 
 " ============================================================================ "
 " ===                           Appearance                               === "
 " ============================================================================ "
+syntax on
 colorscheme dracula
+" colorscheme night-owl
+" set background=dark
+" let g:airline_theme='codedark'
 
+highlight Normal ctermfg=white ctermbg=black " changes background to black
 " prevent cursor moving when pressing space(leader)
 noremap <Space> <Nop>
 let mapleader = " "
@@ -142,11 +150,18 @@ let g:conoline_auto_enable = 1
 " nnoremap <silent><Leader>,s :-1read $HOME/snippets.txt<CR>f)i
 " nnoremap ,cl :-1read $HOME/snippets.txt<CR>f)i
 inoremap \cl console.log()<Esc>i
+nnoremap \cl iconsole.log()<Esc>i
 inoremap \lg console.log()<Esc>i
 inoremap \log console.log()<Esc>i
 inoremap \here console.log('--- HERE ---');<Esc>
+nnoremap \here iconsole.log('--- HERE ---')<Esc>i
+inoremap \af () => {}<Esc>i
 
 command! -nargs=0 P :CocCommand prettier.formatFile
+
+" Enable vs code-like line inserts
+" nmap <S-Enter> O<Esc>
+" nmap <CR> o<Esc>
 
 " Leader shortcuts
 nnoremap <Leader>q :close<CR>
@@ -160,6 +175,7 @@ map <C-n> :NERDTreeToggle<CR>
 " Don't open new windows with NERDTree
 " let g:NERDTreeHijackNetrw=0
 let NERDTreeShowHidden=1
+let NERDTreeQuitOnOpen=1
 " Shortcut for fzf GFiles (opens all files tracked by git)
 " command F GFiles
 " Format with Prettier
@@ -199,6 +215,9 @@ nnoremap <Leader>r :CocRestart<CR><CR>
 " nnoremap <C-_> :nohlsearch<CR>
 nnoremap <silent><Leader>l :nohlsearch<CR>
 
+nmap Y "*y
+vmap Y "*y
+
 " From find and replace video
 " Launch fzf with CTRL+P
 nnoremap <silent> <C-p> :FZF -m<CR>
@@ -217,7 +236,10 @@ vnoremap <leader>p "_dP
 
 " Allow passing optional flags into the Rg command.
 " Example: :Rg myterm -g '*.md'
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case --colors 'path:fg:190,220,255' --colors 'line:fg:128,128,128' " . <q-args>, 1, { 'options': '--color hl:123,hl+:222' }, <bang>0)
+
+noremap <C-k> 5k
+noremap <C-j> 5j
 
 " ============================================================================ "
 " ===                           Coc SETUP                                  === "
